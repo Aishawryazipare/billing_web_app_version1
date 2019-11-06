@@ -9,7 +9,7 @@ namespace App;
     {
         use Notifiable;
         
-        protected $table = 'tbl_employees';
+        protected $table = 'bil_employees';
         protected $guard = 'employee';
 
         protected $fillable = [

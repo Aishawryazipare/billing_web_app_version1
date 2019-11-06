@@ -4,7 +4,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>B</b>App</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>One Care </b>App</span>
+      <span class="logo-lg"><b>airBill Plus </b>App</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">

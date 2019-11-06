@@ -18,6 +18,7 @@ class PurchaseController extends Controller
 {
     public function __construct()
     {
+       $this->middleware('auth.basic');
        $this->middleware(function ($request, $next) {
             $this->user= Auth::user();
             $this->admin = Auth::guard('admin')->user();
@@ -28,8 +29,10 @@ class PurchaseController extends Controller
     
      public function getInventory()
     {
+		$flag=0;
         if(Auth::guard('admin')->check()){
             $id = $this->admin->rid;
+			$flag=1;
             $supplier_data= \App\Supplier::select('sup_id','sup_name')->where(['is_active'=>0,'cid'=>$id])->get();
             $product_data = \App\Item::select('item_id','item_name')->where(['is_active'=>0,'cid'=>$id])->get();
         }else if(Auth::guard('web')->check()){
@@ -55,6 +58,7 @@ class PurchaseController extends Controller
             }
             else if($client_data->location == "multiple" && $role == 1)
             {
+				$flag=1;
                 $product_data = \App\Item::select('item_id','item_name')->where(['is_active'=>0,'cid'=>$cid,'lid'=>$lid])->get();
                 $supplier_data= \App\Supplier::select('sup_id','sup_name')->where(['is_active'=>0,'cid'=>$cid,'lid'=>$lid])->get();
             }
@@ -63,7 +67,7 @@ class PurchaseController extends Controller
 //        print_r($product_data);
 //        exit;
 //        $supplier_data= \App\Supplier::select('sup_id','sup_name')->get();
-        return view('purchase.add_inventory',['supplier_data'=>$supplier_data,'product_data'=>$product_data]);
+        return view('purchase.add_inventory',['supplier_data'=>$supplier_data,'product_data'=>$product_data,'flag'=>$flag]);
     }
     
     public function getItemid(Request $request) {
@@ -96,6 +100,7 @@ class PurchaseController extends Controller
         $requestData = $request->all();
         $item_id=$requestData['inventoryitemid'];
         $status=$requestData['inventorystatus'];
+		$requestData['sync_flag']=0;
         $item_quantity=$requestData['inventoryitemquantity'];
         if(Auth::guard('admin')->check()){
             $requestData['cid'] = $this->admin->rid;
@@ -123,7 +128,7 @@ class PurchaseController extends Controller
                 $item_stock=$item_quantity;
             }
         }
-        Item::find($item_id)->update(['item_stock' => $item_stock]);
+        Item::find($item_id)->update(['item_stock' => $item_stock,'sync_flag' => 0]);
         Session::flash('alert-success','Added Successfully.');
         return redirect('inventory');
     }  

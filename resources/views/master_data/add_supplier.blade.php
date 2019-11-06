@@ -21,12 +21,12 @@
                 {{ csrf_field() }}
               <div class="box-body">
                 <div class="form-group">
-                  <label for="userName" class="col-sm-2 control-label">Name</label>
+                  <label for="userName" class="col-sm-2 control-label">Name<span style="color:#ff0000;">*</span></label>
 
                   <div class="col-sm-4">
                       <input type="text" class="form-control" id="sup_name" placeholder="Company Name" name="sup_name" required>
                   </div>
-                  <label for="company" class="col-sm-2 control-label">Mobile No.</label>
+                  <label for="company" class="col-sm-2 control-label">Mobile No.<span style="color:#ff0000;">*</span></label>
 
                   <div class="col-sm-4">
                       <input type="text" class="form-control" id="sup_mobile_no" placeholder="Mobile No." name="sup_mobile_no" required maxlength="10" onkeypress="return isNumberKey(event)">
@@ -34,7 +34,7 @@
                 </div>
                  <div class="form-group">
                    
-                    <label for="gst" class="col-sm-2 control-label">Email</label>
+                    <label for="gst" class="col-sm-2 control-label">Email<span style="color:#ff0000;">*</span></label>
                   <div class="col-sm-4">
                       <input type="email" class="form-control" id="sup_email" placeholder="Email" name="sup_email_id" required>
                   </div> 

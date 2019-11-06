@@ -18,6 +18,7 @@ class SettingController extends Controller
 {
     public function __construct()
     {
+       $this->middleware('auth.basic');
        $this->middleware(function ($request, $next) {
             $this->user= Auth::user();
             $this->admin = Auth::guard('admin')->user();
@@ -102,23 +103,37 @@ class SettingController extends Controller
     
     public function getMainSetting()
     {
+		$flag=0;
         if(Auth::guard('admin')->check()){
             $cid = $this->admin->rid;
+			$flag=1;
             $hf_setting= \App\HeaderFooter::where('cid','=',$cid)->first();
         }
         else if(Auth::guard('employee')->check()){
             $cid=$this->employee->cid;
             $cid = $this->employee->cid;
             $lid = $this->employee->lid;
+			$role = $this->employee->role;
             $emp_id = $this->employee->id;
+			 $client_data = \App\Admin::select('location')->where(['rid'=>$cid])->first();
             $hf_setting= \App\HeaderFooter::where(['cid'=>$cid,'lid'=>$lid])->first();
+			if($client_data->location == "multiple" && $role == 1)
+            {
+				$flag=1;
+			}
         } 
-        return view('settings.main_setting',['hf_setting'=>$hf_setting]);
+//        echo "<pre>";
+//        print_r($hf_setting);
+//        exit;
+        return view('settings.main_setting',['hf_setting'=>$hf_setting,'flag'=>$flag]);
     }
     
    public function addMainSetting(Request $request)
     {
+//        echo "<pre>";
         $requestData = $request->all();
+//        print_r($requestData);
+//        exit;
         if(Auth::guard('admin')->check()){
             $cid = $this->admin->rid;
             $requestData['cid']=$cid;
@@ -145,7 +160,5 @@ class SettingController extends Controller
         }       
         Session::flash('alert-success','Added Successfully.');
         return redirect('main-setting');
-    }
-   
-    
+    }   
 }
